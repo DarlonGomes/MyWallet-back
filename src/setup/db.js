@@ -5,13 +5,6 @@ dotenv.config();
 
 const MONGO_URI = process.env.MONGO_URI;
 
- async function connectDb(){
-    let db;
-    const client = new MongoClient(MONGO_URI);
-    await client.connect();
-    db = client.db('myWallet');
+const client = new MongoClient(MONGO_URI);
 
-    return db
-}
-
-export default connectDb;
+export default client;
