@@ -3,8 +3,10 @@ import { MongoClient } from 'mongodb';
 
 dotenv.config();
 
+let db;
 const MONGO_URI = process.env.MONGO_URI;
-
 const client = new MongoClient(MONGO_URI);
+await client.connect();
+db = client.db('myWallet');
 
-export default client;
+export default db;

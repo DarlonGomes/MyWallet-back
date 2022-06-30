@@ -1,14 +1,14 @@
-import client from "../setup/db.js";
 import { moneySchema, editSchema } from "../setup/validation.js";
 import { ObjectId } from "mongodb";
+import db from "../setup/mongo.js";
+
 
 export const currencyHandler = async (req,res) => {
     
     const currency = req.body;
     const { authorization } = req.headers;
     const token = authorization?.replace('Bearer ', '');
-    await client.connect();
-    const db = client.db('myWallet');
+    
 
     const validation = moneySchema.validate(currency, {abortEarly: true});
     if(validation.error) return res.sendStatus(422);
@@ -38,8 +38,7 @@ export const userBalance = async (req,res) => {
 
     const { authorization } = req.headers;
     const token = authorization?.replace('Bearer ', '');
-    await client.connect();
-    const db = client.db('myWallet');
+    
     
     try {
 
@@ -65,39 +64,44 @@ export const userBalance = async (req,res) => {
 }
 
 export const editHandler = async (req,res) => {
-    const data = req.body;
+
+    const { id, text, value } = req.body;
     const { authorization } = req.headers;
     const token = authorization?.replace('Bearer ', '');
-    await client.connect();
-    const db = client.db('myWallet');
-
-    const validation = editSchema.validate(data);
+    
+    const validation = editSchema.validate({text, value, id});
     if(validation.error) return res.sendStatus(422);
 
     try {
-       
+        
         if(!token) return res.sendStatus(401);
 
         const session = await db.collection('tokens').findOne({token});
 
         if(!session) return res.sendStatus(401);
 
-        const user = await db.collection('records').findOne({_id: session.userId});
 
-        if(user){
+        const user = await db.collection('records').findOne({_id: session.userId});
+        const dataExist = await db.collection('account').findOne({_id: ObjectId(id), userId: user._id})
+
+    
+        if(user && dataExist){
+        
+            await db.collection('account').updateOne(
+                {_id: ObjectId(id)},
+                {
+                $set:{text, value}
+                }
+                );
+            return res.sendStatus(201);   
             
-            await db.collection('records').findOne({})
-            
-            return res.sendStatus(201);
-        }else{
+        }
+        else{
             return res.sendStatus(422);
         }
-
-    } catch (error) {
-        
+    }catch (error) {
+        return res.sendStatus(500)
     }
-
-
 
 }
 
@@ -106,8 +110,7 @@ export const deleteHandler = async (req,res) => {
     const id = new ObjectId(req.body.id);
     const { authorization } = req.headers;
     const token = authorization?.replace('Bearer ', '');
-    await client.connect();
-    const db = client.db('myWallet');
+  
 
 
 

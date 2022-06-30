@@ -1,11 +1,10 @@
-import client from "../setup/db.js";
+import db from "../setup/mongo.js";
 
 export const userReceipt = async (req,res) => {
 
     const { authorization } = req.headers;
     const token = authorization?.replace('Bearer ', '');
-    await client.connect();
-    const db = client.db('myWallet');
+    
 
         if(!token) return res.sendStatus(401);
 

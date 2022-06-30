@@ -1,4 +1,4 @@
-import client from "../setup/db.js";
+import db from "../setup/mongo.js";
 import { signInSchema, signUpSchema } from "../setup/validation.js";
 import bcrypt from 'bcrypt';
 import { v4 as uuid } from 'uuid';
@@ -6,8 +6,6 @@ import { v4 as uuid } from 'uuid';
 
 export const signUp = async (req,res) => {
 
-    await client.connect();
-    const db = client.db('myWallet');
     const user = req.body;
    
     const validation = signUpSchema.validate(user, {abortEarly: true});
@@ -38,8 +36,6 @@ export const signUp = async (req,res) => {
 
 export const signIn = async (req,res) => {
     
-    await client.connect();
-    const db = client.db('myWallet');
     const login = req.body;
     const validation = signInSchema.validate(login, {abortEarly: true});
     if(validation.error){return res.sendStatus(422)};
