@@ -1,12 +1,13 @@
 import db from "../setup/mongo.js";
 import { signInSchema, signUpSchema } from "../setup/validation.js";
+import { clearData } from "../setup/sanitization.js";
 import bcrypt from 'bcrypt';
 import { v4 as uuid } from 'uuid';
 
 
 export const signUp = async (req,res) => {
 
-    const user = req.body;
+    const user = clearData(req.body);
    
     const validation = signUpSchema.validate(user, {abortEarly: true});
     if(validation.error){return res.sendStatus(422)};
@@ -36,7 +37,7 @@ export const signUp = async (req,res) => {
 
 export const signIn = async (req,res) => {
     
-    const login = req.body;
+    const login = clearData(req.body);
     const validation = signInSchema.validate(login, {abortEarly: true});
     if(validation.error){return res.sendStatus(422)};
 
@@ -49,7 +50,7 @@ export const signIn = async (req,res) => {
             const session = await db.collection('tokens').findOne({userId: user._id});
             
             if(session){
-                return res.send({...session, name: user.name}).status(200);
+                return res.send({token: session.token , name: user.name}).status(200);
             }
 
             const token = uuid();
@@ -57,8 +58,9 @@ export const signIn = async (req,res) => {
                 token: token,
                 userId: user._id
             }
+
             await db.collection('tokens').insertOne(data);
-            return res.send({...data, name: user.name}).status(201);
+            return res.send({token: token, name: user.name}).status(201);
             
         }else{
             return res.sendStatus(401);

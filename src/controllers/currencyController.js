@@ -1,16 +1,17 @@
-import { moneySchema, editSchema } from "../setup/validation.js";
+import { currencySchema, editCurrencySchema } from "../setup/validation.js";
 import { ObjectId } from "mongodb";
+import { clearData } from "../setup/sanitization.js";
 import db from "../setup/mongo.js";
-
+import dayjs from "dayjs";
 
 export const currencyHandler = async (req,res) => {
     
-    const currency = req.body;
+    const currency = clearData(req.body);
     const { authorization } = req.headers;
     const token = authorization?.replace('Bearer ', '');
-    
+    const date = dayjs().format('DD/MM');
 
-    const validation = moneySchema.validate(currency, {abortEarly: true});
+    const validation = currencySchema.validate(currency, {abortEarly: true});
     if(validation.error) return res.sendStatus(422);
     try {
 
@@ -23,7 +24,7 @@ export const currencyHandler = async (req,res) => {
         const user = await db.collection('records').findOne({_id: session.userId});
 
         if(user){
-            await db.collection('account').insertOne({...currency, userId: session.userId});
+            await db.collection('account').insertOne({...currency, userId: session.userId, date: date});
             return res.sendStatus(201);
         }else{
             return res.sendStatus(422);
@@ -65,11 +66,11 @@ export const userBalance = async (req,res) => {
 
 export const editHandler = async (req,res) => {
 
-    const { id, text, value } = req.body;
+    const { id, text, value } = clearData(req.body);
     const { authorization } = req.headers;
     const token = authorization?.replace('Bearer ', '');
     
-    const validation = editSchema.validate({text, value, id});
+    const validation = editCurrencySchema.validate({text, value, id});
     if(validation.error) return res.sendStatus(422);
 
     try {

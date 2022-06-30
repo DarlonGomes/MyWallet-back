@@ -12,12 +12,12 @@ export const signUpSchema = Joi.object({
     repeat_password: Joi.ref('password')
 });
 
-export const moneySchema = Joi.object({
+export const currencySchema = Joi.object({
     value: Joi.number().required(),
     text: Joi.string().min(1).trim().required()
 });
 
-export const editSchema = Joi.object({
+export const editCurrencySchema = Joi.object({
     value: Joi.number(),
     text: Joi.string().min(1).trim(),
     id: Joi.string().required()
