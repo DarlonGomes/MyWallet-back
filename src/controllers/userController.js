@@ -58,7 +58,6 @@ export const signIn = async (req,res) => {
                 userId: user._id
             }
             await db.collection('tokens').insertOne(data);
-            console.log(data)
             return res.send({...data, name: user.name}).status(201);
             
         }else{

@@ -15,4 +15,4 @@ server.use("/user", userHandler);
 
 server.use("/wallet", walletHandler)
 
-server.listen(process.env.PORT, () => {console.log(`Tá rodando na rota ${process.env.PORT}`)});
+server.listen(process.env.PORT);
