@@ -13,6 +13,12 @@ export const signUpSchema = Joi.object({
 });
 
 export const moneySchema = Joi.object({
-    value: Joi.number().min(1).required(),
+    value: Joi.number().required(),
     text: Joi.string().min(1).trim().required()
 });
+
+export const editSchema = Joi.object({
+    value: Joi.number(),
+    text: Joi.string().min(1).trim(),
+    id: Joi.string().required()
+})
