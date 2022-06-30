@@ -35,34 +35,6 @@ export const currencyHandler = async (req,res) => {
     }
 }
 
-export const userBalance = async (req,res) => {
-
-    const { authorization } = req.headers;
-    const token = authorization?.replace('Bearer ', '');
-    
-    
-    try {
-
-        if(!token) return res.sendStatus(401);
-
-        const session = await db.collection('tokens').findOne({token});
-
-        if(!session) return res.sendStatus(401);
-
-        const user = await db.collection('records').findOne({_id: session.userId});
-
-        if(user){
-            const balance =  await db.collection('account').aggregate([{$match: { userId: session.userId }},{$group : {_id: "$userId", total: {$sum:"$value"}}}]).toArray();
-            
-            return res.send(balance[0]).status(200);
-        }else{
-            return res.sendStatus(422);
-        }
-
-    } catch (error) {
-        res.sendStatus(500)
-    }
-}
 
 export const editHandler = async (req,res) => {
 

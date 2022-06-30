@@ -7,10 +7,11 @@ import { v4 as uuid } from 'uuid';
 
 export const signUp = async (req,res) => {
 
-    const user = clearData(req.body);
+    const user = req.body;
    
     const validation = signUpSchema.validate(user, {abortEarly: true});
-    if(validation.error){return res.sendStatus(422)};
+    if(validation.error){console.log(validation.error)
+     return res.sendStatus(422)};
     
     try {
         const alreadyExist = await db.collection('records').findOne({email: user.email})
@@ -34,10 +35,10 @@ export const signUp = async (req,res) => {
 }
 
 
-
 export const signIn = async (req,res) => {
     
     const login = clearData(req.body);
+
     const validation = signInSchema.validate(login, {abortEarly: true});
     if(validation.error){return res.sendStatus(422)};
 
@@ -70,3 +71,4 @@ export const signIn = async (req,res) => {
         return res.sendStatus(500);
     }
 }
+

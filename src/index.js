@@ -13,6 +13,6 @@ server.use(express.json());
 
 server.use("/user", userHandler);
 
-server.use("/wallet", walletHandler)
+server.use("/wallet", walletHandler);
 
 server.listen(process.env.PORT);
