@@ -18,14 +18,11 @@ export const userReceipt = async (req,res) => {
             let receipt = await db.collection('account').find({userId: session.userId}).toArray();
             let [balance] =  await db.collection('account').aggregate([{$match: { userId: session.userId }},{$group : {_id: "$userId", total: {$sum:"$value"}}}]).toArray();
             if(!balance){
-                balance = 0.00;
+                balance = 0;
             }else{
                 delete balance._id;
-                balance = balance.total;
             }
-            if(receipt.length < 1){
-                receipt = null
-            }
+            
             return res.send({receipt,balance}).status(200);
         }else{
             return res.sendStatus(422);

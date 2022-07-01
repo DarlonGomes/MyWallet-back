@@ -7,7 +7,7 @@ const router = express.Router();
 router.get("/receipt", userReceipt);  
 
 router.post("/currency",currencyHandler); 
-router.delete("/currency", deleteHandler); 
+router.delete("/currency/:itemID", deleteHandler); 
 router.put("/currency",  editHandler); 
 
 export default router;

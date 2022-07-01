@@ -24,7 +24,7 @@ export const currencyHandler = async (req,res) => {
         const user = await db.collection('records').findOne({_id: session.userId});
 
         if(user){
-            await db.collection('account').insertOne({...currency, userId: session.userId, date: date});
+            await db.collection('account').insertOne({...currency, userId: user._id, date: date});
             return res.sendStatus(201);
         }else{
             return res.sendStatus(422);
@@ -80,13 +80,10 @@ export const editHandler = async (req,res) => {
 
 export const deleteHandler = async (req,res) => {
 
-    const id = new ObjectId(req.body.id);
+    const id = new ObjectId(req.params.itemID);
     const { authorization } = req.headers;
     const token = authorization?.replace('Bearer ', '');
   
-
-
-
     try {
        
         if(!token) return res.sendStatus(401);
@@ -107,7 +104,7 @@ export const deleteHandler = async (req,res) => {
         }
 
     } catch (error) {
-        
+        return res.sendStatus(500)
     }
 
 }

@@ -10,8 +10,7 @@ export const signUp = async (req,res) => {
     const user = req.body;
    
     const validation = signUpSchema.validate(user, {abortEarly: true});
-    if(validation.error){console.log(validation.error)
-     return res.sendStatus(422)};
+    if(validation.error){return res.sendStatus(422)};
     
     try {
         const alreadyExist = await db.collection('records').findOne({email: user.email})
@@ -23,7 +22,7 @@ export const signUp = async (req,res) => {
 
         delete user.repeat_password;
         const hashPassword = bcrypt.hashSync(user.password, 10);
-
+        
         await (await db).collection('records').insertOne({...user, password: hashPassword})
 
         return res.sendStatus(201);
@@ -57,11 +56,12 @@ export const signIn = async (req,res) => {
             const token = uuid();
             let data = {
                 token: token,
-                userId: user._id
+                userId: user._id,
+                name: user.name
             }
 
             await db.collection('tokens').insertOne(data);
-            return res.send({token: token, name: user.name}).status(201);
+            return res.send({data: data}).status(201);
             
         }else{
             return res.sendStatus(401);
