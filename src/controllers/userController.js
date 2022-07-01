@@ -1,13 +1,12 @@
 import db from "../setup/mongo.js";
-import { signInSchema, signUpSchema } from "../setup/validation.js";
-import { clearData } from "../setup/sanitization.js";
+import { signInSchema, signUpSchema } from "../middlewares/joiMiddleware.js";
 import bcrypt from 'bcrypt';
 import { v4 as uuid } from 'uuid';
 
 
 export const signUp = async (req,res) => {
 
-    const user = req.body;
+    const user = res.locals.cleanData;
    
     const validation = signUpSchema.validate(user, {abortEarly: true});
     if(validation.error){return res.sendStatus(422)};
@@ -36,7 +35,7 @@ export const signUp = async (req,res) => {
 
 export const signIn = async (req,res) => {
     
-    const login = clearData(req.body);
+    const login = res.locals.cleanData;
 
     const validation = signInSchema.validate(login, {abortEarly: true});
     if(validation.error){return res.sendStatus(422)};
