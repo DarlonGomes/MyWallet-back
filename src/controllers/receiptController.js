@@ -5,8 +5,8 @@ export const userReceipt = async (req,res) => {
     const user = res.locals.user;
 
         if(user){
-            let receipt = await db.collection('account').find({userId: user.userId}).toArray();
-            let [balance] =  await db.collection('account').aggregate([{$match: { userId: user.userId }},{$group : {_id: "$userId", total: {$sum:"$value"}}}]).toArray();
+            let receipt = await db.collection('account').find({userId: user._id}).toArray();
+            let [balance] =  await db.collection('account').aggregate([{$match: { userId: user._id }},{$group : {_id: "$userId", total: {$sum:"$value"}}}]).toArray();
             if(!balance){
                 balance = 0;
             }else{
