@@ -3,11 +3,10 @@ import { currencyHandler, deleteHandler, editHandler } from '../controllers/curr
 import { userReceipt } from '../controllers/receiptController.js';
 import { clearData } from "../middlewares/stripMiddleware.js";
 import { currencyValidationSchemas } from '../middlewares/joiMiddlewares.js';
-import { tokenHandler } from '../middlewares/tokenMiddleware.js';
 
 const router = express.Router();
 
-router.get("/receipt",tokenHandler, userReceipt);  
+router.get("/receipt", userReceipt);  
 
 router.post("/currency", clearData,currencyValidationSchemas, currencyHandler); 
 router.delete("/currency/:itemID", deleteHandler); 
