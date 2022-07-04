@@ -1,5 +1,5 @@
-import { signInSchema, signUpSchema } from "../setup/joiMiddleware.js";
-import { currencySchema, editCurrencySchema } from "../setup/joiMiddleware.js";
+import { signInSchema, signUpSchema } from "../setup/joiSchema.js";
+import { currencySchema, editCurrencySchema } from "../setup/joiSchema.js";
 
 export function userValidationSchemas (req,res, next){
     const data = res.locals.cleanData

@@ -1,5 +1,4 @@
 import db from "../setup/mongo.js";
-import { signInSchema, signUpSchema } from "../setup/joiMiddleware.js";
 import bcrypt from 'bcrypt';
 import { v4 as uuid } from 'uuid';
 
