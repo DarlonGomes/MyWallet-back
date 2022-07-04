@@ -7,8 +7,17 @@ export const currencyHandler = async (req,res) => {
     
     const currency = res.locals.cleanData;
     const date = dayjs().format('DD/MM');
-    const user = res.locals.user;
+    //broken middleware
+    const { authorization } = req.headers;
+    const token = authorization?.replace('Bearer ', '');
+    
+    if(!token) return res.sendStatus(401);
 
+    const session = await db.collection('tokens').findOne({token});
+
+    if(!session) return res.sendStatus(401);
+    const user = await db.collection('records').findOne({_id: session.userId});
+    //broken middleware
     try {
 
         if(user){
@@ -27,7 +36,17 @@ export const currencyHandler = async (req,res) => {
 export const editHandler = async (req,res) => {
 
     const { id, text, value } = res.locals.cleanData;
-    const user = res.locals.user;
+    //broken middleware
+    const { authorization } = req.headers;
+    const token = authorization?.replace('Bearer ', '');
+    
+    if(!token) return res.sendStatus(401);
+
+    const session = await db.collection('tokens').findOne({token});
+
+    if(!session) return res.sendStatus(401);
+    const user = await db.collection('records').findOne({_id: session.userId});
+    //broken middleware
     try {
         
         const dataExist = await db.collection('account').findOne({_id: ObjectId(id), userId: user._id})
@@ -56,7 +75,17 @@ export const editHandler = async (req,res) => {
 export const deleteHandler = async (req,res) => {
 
     const id = new ObjectId(req.params.itemID);
-    const user = res.locals.user;
+    const { authorization } = req.headers;
+    //broken middleware
+    const token = authorization?.replace('Bearer ', '');
+    
+    if(!token) return res.sendStatus(401);
+
+    const session = await db.collection('tokens').findOne({token});
+
+    if(!session) return res.sendStatus(401);
+    const user = await db.collection('records').findOne({_id: session.userId});
+    //broken middleware
     try {
         if(user){
             
