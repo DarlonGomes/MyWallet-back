@@ -1,7 +1,8 @@
 import db from "../setup/mongo.js";
 
 export const userReceipt = async (req,res) => {
-
+    
+    //middleware
     const { authorization } = req.headers;
     const token = authorization?.replace('Bearer ', '');
     
@@ -13,6 +14,7 @@ export const userReceipt = async (req,res) => {
         if(!session) return res.sendStatus(401);
 
         const user = await db.collection('records').findOne({_id: session.userId});
+    //middleware
 
         if(user){
             let receipt = await db.collection('account').find({userId: session.userId}).toArray();

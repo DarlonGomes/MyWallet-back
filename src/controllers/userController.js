@@ -1,5 +1,5 @@
 import db from "../setup/mongo.js";
-import { signInSchema, signUpSchema } from "../middlewares/joiMiddleware.js";
+import { signInSchema, signUpSchema } from "../setup/joiMiddleware.js";
 import bcrypt from 'bcrypt';
 import { v4 as uuid } from 'uuid';
 
@@ -7,9 +7,6 @@ import { v4 as uuid } from 'uuid';
 export const signUp = async (req,res) => {
 
     const user = res.locals.cleanData;
-   
-    const validation = signUpSchema.validate(user, {abortEarly: true});
-    if(validation.error){return res.sendStatus(422)};
     
     try {
         const alreadyExist = await db.collection('records').findOne({email: user.email})
@@ -36,9 +33,6 @@ export const signUp = async (req,res) => {
 export const signIn = async (req,res) => {
     
     const login = res.locals.cleanData;
-
-    const validation = signInSchema.validate(login, {abortEarly: true});
-    if(validation.error){return res.sendStatus(422)};
 
     try {
         
