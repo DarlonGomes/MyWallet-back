@@ -1,6 +1,6 @@
 import db from "../setup/mongo.js";
 
-function sessionHandler (req, res, next) {
+export async function sessionHandler (req, res, next) {
     
     const { authorization } = req.headers;
     const token = authorization?.replace('Bearer ', '');

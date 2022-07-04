@@ -4,7 +4,7 @@ import { MongoClient } from 'mongodb';
 dotenv.config();
 
 let db;
-const MONGO_URI = process.env.MONGO_URI;
+const MONGO_URI = process.env.MONGO_TEST;
 const client = new MongoClient(MONGO_URI);
 await client.connect();
 db = client.db('myWallet');
