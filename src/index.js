@@ -8,7 +8,9 @@ dotenv.config()
 
 const server = express();
 
-server.use(cors());
+server.use(cors({
+    origin: "https://my-wallet-cochi.vercel.app"
+}));
 server.use(express.json());
 
 server.use("/user", userHandler);
